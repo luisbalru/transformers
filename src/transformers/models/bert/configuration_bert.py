@@ -69,6 +69,30 @@ BERT_PRETRAINED_CONFIG_ARCHIVE_MAP = {
 }
 
 
+
+class SuperBertConfig(PretrainedConfig):
+    model_type = "bert"
+
+    def __init__(
+        self,
+        pad_token_id=0,
+        num_hidden_layers = 12,
+        **kwargs
+    ):
+        super().__init__(pad_token_id=pad_token_id, **kwargs)
+
+        self.bert_configs = [BertConfig() for _ in range(num_hidden_layers)]
+    
+    def set(self, num_layer, new_config):
+        self.bert_configs[num_layer].new_configuration(new_config)
+
+
+
+
+
+
+
+
 class BertConfig(PretrainedConfig):
     r"""
     This is the configuration class to store the configuration of a [`BertModel`] or a [`TFBertModel`]. It is used to
@@ -175,6 +199,9 @@ class BertConfig(PretrainedConfig):
         self.position_embedding_type = position_embedding_type
         self.use_cache = use_cache
         self.classifier_dropout = classifier_dropout
+    
+    def new_configuration(self, new_configuration):
+        
 
 
 class BertOnnxConfig(OnnxConfig):
